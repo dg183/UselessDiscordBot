@@ -1,9 +1,6 @@
 module.exports = {
-    name: 'role',
-    description: `Change a specified user's role`,
-    args: true,
-    usage: '<user> <role>',
-    guildOnly: true,
+    name: 'makeme',
+    description: 'Update role of calling user',
     execute(message, args) {
         const rolesMentioned = message.mentions.roles.map(role => role.name);
 
@@ -30,6 +27,5 @@ module.exports = {
 
         // Confirmation message
         message.channel.send(`Ya got changed to a ${rolesMentioned[0]}`);
-        
     },
 };
