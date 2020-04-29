@@ -1,0 +1,12 @@
+{
+    "name": "yoyorichayyy",
+    "version": "1.0.0",
+    "description": "Bot that imitates yoyorichayyy",
+    "main": "index.js",
+    "author": "Ya Boi",
+    "dependencies": {
+        "discord.io": "^2.5.3",
+        "discord.js": "^12.2.0",
+        "winston": "^3.2.1"
+    }
+}
