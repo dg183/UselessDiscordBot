@@ -19,17 +19,20 @@ module.exports = {
             return;
         }
 
+        const membersMentioned = message.mentions.members.map(member => member.name);
+        if (!membersMentioned.length) {
+            message.reply(`please specify a user`);
+        }
 
-        // console.log("these roles: ",message.mentions.roles);
-        // console.log("these roles mapped: ",message.mentions.roles.map(role => role.name));
-
-        // Change role
-        message.guild.member(message.author).roles.set(message.mentions.roles)
+        // For each member, 
+        message.mentions.members.map(member => {
+            // Change role
+            message.guild.member(member).roles.set(message.mentions.roles)
             .then(console.log)
             .catch(console.error);
+            message.channel.send(`${member} got changed to a ${rolesMentioned[0]}`); // Confirmation message
+        })
 
-        // Confirmation message
-        message.channel.send(`Ya got changed to a ${rolesMentioned[0]}`);
         
     },
 };
