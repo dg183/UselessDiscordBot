@@ -18,10 +18,9 @@ module.exports = {
     
     try {
       command.init();
+      command.execute(message);
     } catch (error) {
       return console.error(error);
     }
-    
-    message.channel.send('Reloaded');
   },
 };

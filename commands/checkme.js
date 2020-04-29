@@ -49,7 +49,6 @@ module.exports.init = async function() {
         };
       });
       module.exports.sheet_data = JSON.stringify(mods);
-      console.log(`wtf: ${sheet_data}`);
     } else {
       console.log('No data found.');
     }
@@ -76,7 +75,7 @@ async function authorize() {
 
 
 module.exports.execute = function(message, args) {
-  console.log(`end: ${sheet_data}`);
-  const result = sheet_data.includes(message.author.username);
-  message.channel.send(sheet_data);
+  const result = module.exports.sheet_data.includes(message.author.username);
+  if (result) {message.channel.send(`${message.author.username} is in the spreadsheet!`);}
+  else if (!result) {message.channel.send(`${message.author.username} is not the spreadsheet!`);}
 };
