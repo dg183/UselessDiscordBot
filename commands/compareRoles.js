@@ -13,7 +13,7 @@ module.exports = {
          *      the order of the roles is invalid
          * 'message.mentions.roles' is an unordered set. 
          *      This means that we cannot compare two of the same roles ('!comp @rookie @rookie),
-         *              as @rookies will only show up once in the set
+         *              as @rookie will only show up once in the set
          *      This also means that we cannot compare by order, since the set isn't
          *              ordered in the same order they were mentioned
          */
