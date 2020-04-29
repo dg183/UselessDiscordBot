@@ -3,6 +3,7 @@ module.exports = {
     description: 'Update role of calling user',
     execute(message, args) {
         const rolesMentioned = message.mentions.roles.map(role => role.name);
+        const rolesList = message.mentions.roles.array();
 
         // If no roles mentioned
         if (!rolesMentioned.length) {
@@ -16,9 +17,22 @@ module.exports = {
             return;
         }
 
+        // TODO: check that the role mentioned is lower than or equal to current role
+        const wantedRole = rolesList[0];
+        const currentRole = message.guild.member(message.author).roles.highest;
 
-        // console.log("these roles: ",message.mentions.roles);
-        // console.log("these roles mapped: ",message.mentions.roles.map(role => role.name));
+        /**Result ==:
+         * Negative if current < wanted
+         * Positive if current > wanted
+         * 0 if same
+         */
+        result = currentRole.comparePositionTo(wantedRole);
+
+        // If not high enough permissions, exit
+        if (result <= 0) {
+            message.channel.send(`Sorry buddy boy you aint high enough rank to do this`);
+            return;
+        }
 
         // Change role
         message.guild.member(message.author).roles.set(message.mentions.roles)
