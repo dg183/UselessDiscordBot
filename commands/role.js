@@ -30,7 +30,7 @@ module.exports = {
             message.guild.member(member).roles.set(message.mentions.roles)
             .then(console.log)
             .catch(console.error);
-            message.channel.send(`${member} got changed to a ${rolesMentioned[0]}`); // Confirmation message
+            message.channel.send(`${member.tag} got changed to a ${rolesMentioned[0]}`); // Confirmation message
         })
 
         
