@@ -1,3 +1,4 @@
+const { prefix } = require('../config.js');
 const {
  google
 } = require('googleapis');
@@ -8,7 +9,6 @@ const {
   google_private_key,
 } = require('../config.js');
 
-let sheet_data;
 
 module.exports = {
   name: 'checkme',
@@ -20,7 +20,6 @@ module.exports = {
 
 module.exports.init = async function() {
   // Authorize Client for spreadsheets
-
   let jwtClient = await authorize();
   if (jwtClient === null) {
     console.log('Authorization for Google Sheets Failed');
@@ -44,11 +43,12 @@ module.exports.init = async function() {
     if (rows.length) {
       const mods = rows.map((row) => {
         return {
-          name: row[0],
-          zid: row[1],
+          discord_user: row[0],
+          hash: row[5],
         };
       });
       module.exports.sheet_data = JSON.stringify(mods);
+      return module.exports.sheet_data;
     } else {
       console.log('No data found.');
     }
@@ -73,9 +73,23 @@ async function authorize() {
     return jwtClient;
 };
 
-
-module.exports.execute = function(message, args) {
-  const result = module.exports.sheet_data.includes(message.author.username);
-  if (result) {message.channel.send(`${message.author.username} is in the spreadsheet!`);}
-  else if (!result) {message.channel.send(`${message.author.username} is not the spreadsheet!`);}
+module.exports.execute = async function(message, args) {
+    try {
+      var result = await module.exports.init();
+      await new Promise((resolve, reject) => setTimeout(resolve, 2000));
+      var sheets = module.exports.sheet_data;
+      if (args.length) {
+        let parsed = JSON.parse(sheets);
+        for (let i = 0; i < parsed.length; i++) {
+            if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
+              return message.channel.send(`${message.author.username} is allowed!`);
+            }
+        }
+        message.channel.send(`${message.author.username} is not allowed!`);
+      }
+      else {message.reply(`You need to give me your verification code as well!\nTry \`${prefix}checkme [verification code]\`\n\
+If you haven't recieved a verification code yet, please fill out the google form to get emailed a code to your UNSW email: https://forms.gle/PcJqvmpx9UjbNEiN6`);}
+    } catch (e) {
+      console.error(e);
+    }
 };
