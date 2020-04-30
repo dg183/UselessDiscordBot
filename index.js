@@ -73,7 +73,7 @@ client.on('message', message => {
 
     const now = Date.now();
     const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000; // default = 3
+    const cooldownAmount = (command.cooldown || 1) * 1000; // default = 3
 
     if (timestamps.has(message.author.id)) {
         const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
