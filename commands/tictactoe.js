@@ -65,26 +65,17 @@ module.exports = {
                 player2 = member;
             })
                 
-            message.channel.send(`player2 = ${player2}`);
-
-
-            message.channel.send(`!ttt start`);
-            console.log("client.ttt =",client.tictactoe);
-            
-            message.channel.send(`${client.tictactoe.length} games currently running,`);
-
             game = new TicTacToeGame(message.author,player2);
             client.tictactoe[client.tictactoe.length] = game;
 
-            message.channel.send(`adding one more to make ${client.tictactoe.length}\n`);
-            message.channel.send(`client.ttt = ${client.tictactoe[client.tictactoe.length - 1]}`);
-            console.log("client.ttt =",client.tictactoe[client.tictactoe.length - 1]);
+            message.channel.send(`${game}`);
+            console.log("client.ttt =", game);
             return;
         }
 
         /* ===== !ttt place <spot> ===== */
         if (args[0].toLowerCase() === 'place') {
-            message.channel.send(`!ttt place`);
+            // message.channel.send(`!ttt place`);
 
             if (args.length != 2) {
                 message.channel.send(`Usage: !ttt place <position>. Get it right buddy`);
@@ -92,9 +83,8 @@ module.exports = {
             }
             // let position = Number.isInteger(args[1]);
             let position = parseInt(args[1]);
-            message.channel.send(`position = ${position}`);
             // message.channel.send(`args[1] = ${args[1]}`);
-            if (!position) {
+            if (!position) {    
                 message.channel.send(`Usage: !ttt place <position>. Position is a NUMBER`);
                 return;
             }
@@ -104,10 +94,10 @@ module.exports = {
 
             let ret = game.makeMove(position);
 
-            // Check if makeMove gave error
+            // Check if makeMove gave error or game ended
             switch (ret) {
                 case 0:
-                    message.channel.send(`Nice move champ.`);
+                    // message.channel.send(`Nice move champ.`);
                     break;
                 case 1:
                     message.channel.send(`Congrats ${game.player1}, you smashed that fool!`);
@@ -119,11 +109,11 @@ module.exports = {
                     message.channel.send(`Tie game. You both suck.`);
                     break;
                 case 4:
-                    message.channel.send(`Position out of bounds. Enter position 1-9 (inclusive).`);
-                    break;
+                    message.channel.send(`Invalid move! Enter a number between \`1-9\` to make a move on the board.`);
+                    return; // Error, don't reprint board
                 case 5:
                     message.channel.send(`Position already occupied pls read properly.`);
-                    break;
+                    return; // Error, don't reprint board
             }
             
             message.channel.send(`${game}`);

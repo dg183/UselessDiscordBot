@@ -8,6 +8,12 @@ let winningCombinations = [
  *      - game board (array 1-9)
  *      - player 1 (<GuildMember>)
  *      - player 2 (<GuildMember>)
+ *      - turn: 1 or 2 to denote who's turn it is
+ *      - state:
+ *          * -1 = first move not made yet
+ *          *  0 = game in progress
+ *          *  1 = Player 1 won
+ *          *  2 = Player 2 won
  * 
  * Player 1 = X
  * Player 2 = O
@@ -33,6 +39,7 @@ class TicTacToeGame {
         this.player2 = player2;
         this.boardSize = 3;
         this.turn = 1; // start with player 1's turn
+        this.state = -1;
     };
 
 
@@ -43,9 +50,21 @@ class TicTacToeGame {
      */
     toString() {
         let currPlayer = (this.turn == 1) ? this.player1 : this.player2;
-        // return "\nBoard = {\n" + this.boardToString() + "}\nPlayer 1 = " + this.player1.tag + "\nPlayer2 = " + this.player2.tag;
-        return `\nBoard = {\n${this.boardToString()}\n}\nPlayer 1 = ${this.player1}\n\
-Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
+        let statement = `${this.player1} (X) vs ${this.player2} (O)\n`;
+
+        if (this.state == -1) {
+            statement += `==========\n${this.boardToStringInitial()}\n==========\n`;
+            this.state = 0; // only print initial once
+        } else {
+                statement += `==========\n${this.boardToString()}\n==========\n`;
+        }
+
+        if (this.state <= 0) { // If game not won yet, add 'next move'
+            statement += `Next to move is ${currPlayer}. Do \`!ttt place <position>\` to make your move.`;
+        }
+        // return `${this.player1} (X) vs ${this.player2} (O)\n==========\n\
+// ${this.boardToString()}\n==========\nNext to move is ${currPlayer}`;
+        return statement;
     }
 
     /**
@@ -99,6 +118,36 @@ Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
     }
 
     /**
+     * Turn board into a pretty string (tic-tac-toe grid)
+     * This board has numbers (1-9) in each position
+     * Returns: String
+     */
+    boardToStringInitial() {
+        let bStr = "";
+
+        let i = 0;
+        while (i < this.boardSize ** 2) { // while i < 9
+
+            bStr += (i + 1);
+
+            if (i % this.boardSize != this.boardSize - 1) { // if not edge
+                bStr += " | ";
+            } else if (i != this.boardSize ** 2 - 1) { // if last square, don't print horizontal line
+                bStr += "\n";
+                for (let j = 0; j < (3*this.boardSize + 1); j++) {
+                    bStr += "-";
+                }
+                bStr += "\n";
+            }
+            
+
+            i++;
+        }
+        return bStr;
+
+    }
+
+    /**
      * Change to next player's turn
      * Returns: None
      */
@@ -126,23 +175,23 @@ Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
 
         /* Checking for valid inputs */
         if (position < 1 || position > 9) {
-            return 3; // position out of bounds
+            return 4; // position out of bounds
         }
 
         /* Shift index for 0-indexed array*/
         let index = position - 1;
         if (this.board[index] !== 0) {
-            return 4; // position already occupied
+            return 5; // position already occupied
         }
 
         /* Place piece in position */
         this.board[index] = this.turn; 
 
         /* Check if that was game winning move */
-        let winner = this._checkWinner();
+        this.state = this._checkWinner();
 
         // If winner
-        switch (winner) {
+        switch (this.state) {
             case 1:
                 return 1;
             case 2:
@@ -153,6 +202,7 @@ Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
 
         /* Alternate turn */
         this.nextTurn();
+
         
         return 0;
     }
@@ -173,7 +223,7 @@ Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
             let board = this.board;
 
             // check if 3 in a row equal
-            if (board[c[0]] === board[c[1]] && board[c[1]] === board[c[2]]) { 
+            if (board[c[0]] === board[c[1]] && board[c[1]] === board[c[2]] && board[c[0]] !== 0) { 
                 return board[c[0]]; // returns player who won based on pieces on board
             }
         }
