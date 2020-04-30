@@ -6,15 +6,21 @@
  *      - player 1 (<GuildMember>)
  *      - player 2 (<GuildMember>)
  * 
+ * Player 1 = X
+ * Player 2 = O
+ * 
+ * Default player 1 starts
+ * 
  */
 
 class TicTacToeGame {
+    /**
+     * Board = [0,0,0,0,0,0,0,0,0] (len = 9)
+     * Turn = 1
+     * @param {GuildMember} player1 
+     * @param {GuildMember} player2 
+     */
     constructor(player1, player2) {
-        // if (!player1.equals(GuildMember) || !player2.equals(GuildMember)) {
-        //     console.log("New ttt game, player not guildmember\n");
-        //     return;
-        // }
-
         this.board = new Array(9);
         for (let i = 0; i < 9; i++) {
             this.board[i] = 0;
@@ -22,13 +28,19 @@ class TicTacToeGame {
         this.player1 = player1;
         this.player2 = player2;
         this.boardSize = 3;
+        this.turn = 1; // start with player 1's turn
     };
 
-    // TicTacToeGame.prototype.toString = function() {
 
-    // }
+    /**
+     * Override for default toString() function
+     * Prints pretty board, player 1, player 2, current turn
+     * Returns: String
+     */
     toString() {
-        return "\nBoard = {\n" + this.boardToString() + "}\nPlayer 1 = " + this.player1.tag + "\nPlayer2 = " + this.player2.tag;
+        // return "\nBoard = {\n" + this.boardToString() + "}\nPlayer 1 = " + this.player1.tag + "\nPlayer2 = " + this.player2.tag;
+        return `\nBoard = {${this.boardToString()}}\nPlayer 1 = ${this.player1.tag}\n\
+Player2 = ${this.player2.tag}\nCurrent turn belongs to Player ${this.turn}`;
     }
 
     _printBoard() {
@@ -38,6 +50,11 @@ class TicTacToeGame {
         console.log(this.boardToString);
     }
 
+
+    /**
+     * TUrn board into a pretty string (tic-tac-toe grid)
+     * Returns: String
+     */
     boardToString() {
         let bStr = "";
 
@@ -62,6 +79,20 @@ class TicTacToeGame {
         return bStr;
 
     }
+
+    /**
+     * Change to next player's turn
+     * Returns: None
+     */
+    nextTurn() {
+        if (this.turn == 1) {
+            this.turn = 2;
+        } else {
+            this.turn = 1;
+        }
+    }
+
+
 }
 
 module.exports = TicTacToeGame;
