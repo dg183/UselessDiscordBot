@@ -76,10 +76,11 @@ async function authorize() {
 module.exports.execute = async function(message, args) {
     try {
       var result = await module.exports.init();
-      await new Promise((resolve, reject) => setTimeout(resolve, 2000));
-      var sheets = module.exports.sheet_data;
       if (args.length) {
+        await new Promise((resolve, reject) => setTimeout(resolve, 2000));
+        var sheets = module.exports.sheet_data;
         let parsed = JSON.parse(sheets);
+        if (parsed.length === 0) {}
         for (let i = 0; i < parsed.length; i++) {
             if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
               return message.channel.send(`${message.author.username} is allowed!`);
