@@ -106,16 +106,27 @@ module.exports = {
 
             // Check if makeMove gave error
             switch (ret) {
+                case 0:
+                    message.channel.send(`Nice move champ.`);
+                    break;
                 case 1:
-                    message.channel.send(`Enter position 1-9 (inclusive)`);
-                    return;
+                    message.channel.send(`Congrats ${game.player1}, you smashed that fool!`);
+                    break;
                 case 2:
-                    message.channel.send(`Position already occupied pls read properly`);
-                    return;
+                    message.channel.send(`Good shit ${game.player2}, block out the haters.`);
+                    break;
+                case 3:
+                    message.channel.send(`Tie game. You both suck.`);
+                    break;
+                case 4:
+                    message.channel.send(`Position out of bounds. Enter position 1-9 (inclusive).`);
+                    break;
+                case 5:
+                    message.channel.send(`Position already occupied pls read properly.`);
+                    break;
             }
             
-            message.channel.send(`Nice move champ, board is now\n${game}`);
-
+            message.channel.send(`${game}`);
             
 
             return;
