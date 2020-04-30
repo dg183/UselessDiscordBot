@@ -7,11 +7,14 @@
          *  !ttt help <command> 
          *      - Give help on tictactoe command
          * 
-         *  !ttt start @player2
+         *  !ttt challenge @player2
          *      - Start a new game with player 2
          * 
-         *  !ttt play <spot>
+         *  !ttt place <spot>
          *      - Place piece (X/O) in specified spot (1-9)
+         * 
+         *  !ttt simulate
+         *      - Simulate a game with random moves
          * 
          *  !ttt status
          *      - Show current game status
@@ -23,6 +26,7 @@
          */
 
 const TicTacToeGame = require('../classes/TicTacToeGameClass');
+let game;
 
 module.exports = {
     name: 'tictactoe',
@@ -35,27 +39,41 @@ module.exports = {
         const client = message.client;
         console.log("client:",client);
 
-        /* ===== !ttt =====*/
+        /* ===== !ttt ===== */
         if (!args.length) {
             // Display start menu
             message.channel.send(`!ttt display start menu`);
             return;
         }
 
-        /* ===== !ttt help =====*/
+        /* ===== !ttt help <command> ===== */
         if (args[0].toLowerCase() === 'help') {
             message.channel.send(`!ttt help`);
             return;
         }
 
-        /* ===== !ttt start =====*/
-        if (args[0].toLowerCase() === 'start') {
+        /* ===== !ttt challenge @player2 ===== */
+        if (args[0].toLowerCase() === 'challenge') {
+
+            // TODO: Implement challenging second player
+            if (args.length != 2) {
+                message.channel.send(`Usage: !ttt challenge <@Player>. Get it right buddy`);
+                return;
+            }
+            let player2;
+            message.mentions.members.map(member => {
+                player2 = member;
+            })
+                
+            message.channel.send(`player2 = ${player2}`);
+
+
             message.channel.send(`!ttt start`);
             console.log("client.ttt =",client.tictactoe);
             
             message.channel.send(`${client.tictactoe.length} games currently running,`);
 
-            let game = new TicTacToeGame(message.author,message.author);
+            game = new TicTacToeGame(message.author,player2);
             client.tictactoe[client.tictactoe.length] = game;
 
             message.channel.send(`adding one more to make ${client.tictactoe.length}\n`);
@@ -64,13 +82,69 @@ module.exports = {
             return;
         }
 
-        /* ===== !ttt play =====*/
-        if (args[0].toLowerCase() === 'play') {
-            message.channel.send(`!ttt play`);
+        /* ===== !ttt place <spot> ===== */
+        if (args[0].toLowerCase() === 'place') {
+            message.channel.send(`!ttt place`);
+
+            if (args.length != 2) {
+                message.channel.send(`Usage: !ttt place <position>. Get it right buddy`);
+                return;
+            }
+            // let position = Number.isInteger(args[1]);
+            let position = parseInt(args[1]);
+            message.channel.send(`position = ${position}`);
+            // message.channel.send(`args[1] = ${args[1]}`);
+            if (!position) {
+                message.channel.send(`Usage: !ttt place <position>. Position is a NUMBER`);
+                return;
+            }
+
+            
+            game = client.tictactoe[client.tictactoe.length - 1];
+
+            let ret = game.makeMove(position);
+
+            // Check if makeMove gave error
+            switch (ret) {
+                case 1:
+                    message.channel.send(`Enter position 1-9 (inclusive)`);
+                    return;
+                case 2:
+                    message.channel.send(`Position already occupied pls read properly`);
+                    return;
+            }
+            
+            message.channel.send(`Nice move champ, board is now\n${game}`);
+
+            
+
             return;
         }
 
-        /* ===== !ttt status =====*/
+        /* ===== !ttt simulate ===== */
+        if (args[0].toLowerCase() === 'simulate') {
+            message.channel.send(`!ttt simulate`);
+            game = client.tictactoe[client.tictactoe.length - 1];
+            if (!game) {
+                message.channel.send(`!ttt no game started yet`);
+                return;
+            }
+
+            // TODO: make random
+            game.makeMove(5);
+            message.channel.send(`${game}`);
+            game.makeMove(1);
+            message.channel.send(`${game}`);
+            game.makeMove(6);
+            message.channel.send(`${game}`);
+            game.makeMove(2);
+            message.channel.send(`${game}`);
+            game.makeMove(4);
+            message.channel.send(`${game}`);
+        }
+
+
+        /* ===== !ttt status ===== */
         if (args[0].toLowerCase() === 'status') {
             message.channel.send(`!ttt status`);
 
@@ -83,13 +157,14 @@ module.exports = {
             return;
         }
 
-        /* ===== !ttt leave =====*/
+        /* ===== !ttt leave ===== */
         if (args[0].toLowerCase() === 'leave') {
             message.channel.send(`!ttt leave`);
             return;
         }
 
         // If you've reached here, the inputed arguments are invalid
-        
+        message.channel.send(`Print help menu for this fool`);
+
     },
 };

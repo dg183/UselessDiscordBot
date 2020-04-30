@@ -38,11 +38,15 @@ class TicTacToeGame {
      * Returns: String
      */
     toString() {
+        let currPlayer = (this.turn == 1) ? this.player1 : this.player2;
         // return "\nBoard = {\n" + this.boardToString() + "}\nPlayer 1 = " + this.player1.tag + "\nPlayer2 = " + this.player2.tag;
-        return `\nBoard = {${this.boardToString()}}\nPlayer 1 = ${this.player1.tag}\n\
-Player2 = ${this.player2.tag}\nCurrent turn belongs to Player ${this.turn}`;
+        return `\nBoard = {\n${this.boardToString()}}\nPlayer 1 = ${this.player1}\n\
+Player2 = ${this.player2}\nCurrent turn belongs to Player ${currPlayer}`;
     }
 
+    /**
+     * Print board to console (for debugging)
+     */
     _printBoard() {
         for (let i = 0; i < 9; i++) {
             console.log(this.board[i]);
@@ -61,13 +65,23 @@ Player2 = ${this.player2.tag}\nCurrent turn belongs to Player ${this.turn}`;
         let i = 0;
         while (i < this.boardSize ** 2) { // while i < 9
 
-            bStr += this.board[i]; // add number
+            switch (this.board[i]) {
+                case 0:
+                    bStr += "   ";
+                    break;
+                case 1:
+                    bStr += "X";
+                    break;
+                case 2:
+                    bStr += "O";
+                    break;
+            }
 
             if (i % this.boardSize != this.boardSize - 1) { // if not edge
-                bStr += "|";
+                bStr += " | ";
             } else {
                 bStr += "\n";
-                for (let j = 0; j < (2*this.boardSize - 1); j++) {
+                for (let j = 0; j < (3*this.boardSize + 1); j++) {
                     bStr += "-";
                 }
                 bStr += "\n";
@@ -90,6 +104,34 @@ Player2 = ${this.player2.tag}\nCurrent turn belongs to Player ${this.turn}`;
         } else {
             this.turn = 1;
         }
+    }
+
+    /**
+     * Called when current player makes a move
+     * @param {Integer} position - position to place piece on board
+     * 
+     * Returns:
+     * * 0 if valid move 
+     * * 1 if invalid position (out of bounds)
+     * * 2 if position already occupied
+     */
+    makeMove(position) {
+        if (position < 1 || position > 9) {
+            return 1; // position out of bounds
+        }
+
+        let index = position - 1;
+
+        if (this.board[index] !== 0) {
+            return 2; // position already occupied
+        }
+
+        // let piece = this.turn == 1 ? "X" : "O";
+
+        this.board[index] = this.turn; 
+        this.nextTurn();
+        
+
     }
 
 
