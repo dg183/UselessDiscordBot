@@ -1,7 +1,6 @@
 # UselessDiscordBot
 
 ## Install 
----
 `npm install node.js`
 
 `npm install googleapis`
@@ -10,7 +9,6 @@
 
 
 ## Run
----
 
 `node index.js`
 
