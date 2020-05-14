@@ -81,6 +81,7 @@ module.exports.execute = async function(message, args) {
         var sheets = module.exports.sheet_data;
         let parsed = JSON.parse(sheets);
         if (parsed.length === 0) {}
+        console.log(parsed);
         for (let i = 0; i < parsed.length; i++) {
             if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
               return message.channel.send(`${message.author.username} is allowed!`);
@@ -89,7 +90,7 @@ module.exports.execute = async function(message, args) {
         message.channel.send(`${message.author.username} is not allowed!`);
       }
       else {message.reply(`You need to give me your verification code as well!\nTry \`${prefix}checkme [verification code]\`\n\
-If you haven't recieved a verification code yet, please fill out the google form to get emailed a code to your UNSW email: https://forms.gle/PcJqvmpx9UjbNEiN6`);}
+If you haven't recieved a verification code yet, please fill out the google form to get emailed a code to your UNSW email: https://forms.gle/TSg9YXqeokzi2Jad8`);}
     } catch (e) {
       console.error(e);
     }
