@@ -1,8 +1,5 @@
 .env
-<<<<<<< HEAD
-=======
 config.js
->>>>>>> shef
 config.json
 config.js
 package-lock.json
