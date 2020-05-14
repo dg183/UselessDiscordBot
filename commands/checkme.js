@@ -82,7 +82,7 @@ module.exports.execute = async function(message, args) {
         var sheets = module.exports.sheet_data;
         if (sheets != "") {
           let parsed = JSON.parse(sheets);
-          console.log(parsed);
+        //   console.log(parsed);
           for (let i = 0; i < parsed.length; i++) {
 
               // checks if verification code is valid
@@ -90,22 +90,37 @@ module.exports.execute = async function(message, args) {
                 
                 assignVerifiedRole(message);
 
-                return message.channel.send(`${message.author.username} has been verified!`);
+                return message.channel.send(`${message.author.username} you have been verified!`);
               }
           }
         }
         
         message.channel.send(`${message.author.username} is not allowed!`);
       }
-      else {message.reply(`You need to give me your verification code as well!\nTry \`${prefix}checkme [verification code]\`\n\
+      else {
+		  message.author.send(`You need to give me your verification code as well!\nTry \`${prefix}checkme [verification code]\`\n\
 If you haven't recieved a verification code yet, please fill out the google form to get emailed a code to your UNSW email: https://forms.gle/TSg9YXqeokzi2Jad8`);}
     } catch (e) {
       console.error(e);
     }
 };
 
+// This function will assign the 'Verified' role to the author of the message
+// Note: this message will be a DM, so there will be no guild attached
 function assignVerifiedRole(message) {
-	var cache = message.guild.roles.cache;
+
+	// Since this msg has no guild, we need to search for the guild
+	var guilds = message.client.guilds.cache;
+	var myGuild;
+
+	guilds.map(guild => {
+		console.log("guild: ",guild);
+		if (guild.name === "richie's bitchies :)") {
+			myGuild = guild;
+		}
+	});
+
+	var cache = myGuild.roles.cache;
 	var verifiedRole;
 
 	cache.map(role => {
@@ -113,10 +128,7 @@ function assignVerifiedRole(message) {
 			verifiedRole = role;
 		}
 	})
-	console.log(cache);
-	console.log(verifiedRole);
 
-
-  message.guild.member(message.author).roles.add([verifiedRole]);
+  	myGuild.member(message.author).roles.add([verifiedRole]);
 
   }
