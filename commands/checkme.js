@@ -40,7 +40,8 @@ module.exports.init = async function() {
 
     const rows = response.data.values;
 
-    if (rows.length) {
+
+    if (rows && rows.length) {
       const mods = rows.map((row) => {
         return {
           discord_user: row[0],
@@ -79,14 +80,16 @@ module.exports.execute = async function(message, args) {
       if (args.length) {
         await new Promise((resolve, reject) => setTimeout(resolve, 2000));
         var sheets = module.exports.sheet_data;
-        let parsed = JSON.parse(sheets);
-        if (parsed.length === 0) {}
-        console.log(parsed);
-        for (let i = 0; i < parsed.length; i++) {
-            if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
-              return message.channel.send(`${message.author.username} is allowed!`);
-            }
+        if (sheets != "") {
+          let parsed = JSON.parse(sheets);
+          console.log(parsed);
+          for (let i = 0; i < parsed.length; i++) {
+              if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
+                return message.channel.send(`${message.author.username} is allowed!`);
+              }
+          }
         }
+        
         message.channel.send(`${message.author.username} is not allowed!`);
       }
       else {message.reply(`You need to give me your verification code as well!\nTry \`${prefix}checkme [verification code]\`\n\
