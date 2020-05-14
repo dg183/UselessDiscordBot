@@ -84,8 +84,13 @@ module.exports.execute = async function(message, args) {
           let parsed = JSON.parse(sheets);
           console.log(parsed);
           for (let i = 0; i < parsed.length; i++) {
+
+              // checks if verification code is valid
               if (parsed[i].discord_user == message.author.tag && parsed[i].hash == args[0]){
-                return message.channel.send(`${message.author.username} is allowed!`);
+                
+                assignVerifiedRole(message);
+
+                return message.channel.send(`${message.author.username} has been verified!`);
               }
           }
         }
@@ -98,3 +103,20 @@ If you haven't recieved a verification code yet, please fill out the google form
       console.error(e);
     }
 };
+
+function assignVerifiedRole(message) {
+	var cache = message.guild.roles.cache;
+	var verifiedRole;
+
+	cache.map(role => {
+		if (role.name === 'rookie') {
+			verifiedRole = role;
+		}
+	})
+	console.log(cache);
+	console.log(verifiedRole);
+
+
+  message.guild.member(message.author).roles.add([verifiedRole]);
+
+  }
