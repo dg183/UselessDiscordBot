@@ -9,7 +9,7 @@
         "discord.js": "^12.2.0",
         "dotenv": "^8.2.0",
         "google-auth-library": "^6.0.0",
-        "googleapis": "^39.2.0",
+        "googleapis": "^118.0.0",
         "winston": "^3.2.1"
     }
 }
